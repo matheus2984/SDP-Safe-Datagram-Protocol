@@ -3,3 +3,8 @@ C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\PackageLibrary\bin\Debug\
 C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\PackageLibrary\bin\Debug\PackageLibrary.pdb
 C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\PackageLibrary\obj\Debug\PackageLibrary.dll
 C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\PackageLibrary\obj\Debug\PackageLibrary.pdb
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\Tests\PackageLibrary\bin\Debug\PackageLibrary.dll
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\Tests\PackageLibrary\bin\Debug\PackageLibrary.pdb
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\Tests\PackageLibrary\obj\Debug\PackageLibrary.csprojResolveAssemblyReference.cache
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\Tests\PackageLibrary\obj\Debug\PackageLibrary.dll
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\Tests\PackageLibrary\obj\Debug\PackageLibrary.pdb

@@ -2,18 +2,20 @@
 using System.Net.Sockets;
 using SDP.Events;
 using SDP.Interfaces;
+using SDP.TCP.Managers;
+using SocketType = SDP.Enums.SocketType;
 
 namespace SDP.TCP
 {
     /// <summary>
     /// Objeto que representa uma conexão realizada
     /// </summary>
-    public class AsyncState : IAsyncState
+    public class AsyncState : IAsyncState, IReceive, ISend
     {
         /// <summary>
         /// Socket da conexão
         /// </summary>
-        public Socket Socket { get; set; }
+        internal Socket Socket { get; private set; }
 
         /// <summary>
         /// Buffer de recebimento de dados
@@ -26,75 +28,86 @@ namespace SDP.TCP
         public byte[] ReceivedBuffer { get; set; }
 
         /// <summary>
+        /// Cabeçalho do ultimo pacote de dados recebido
+        /// </summary>
+        internal byte[] ReceiveBufferHeader { get; set; }
+
+        /// <summary>
         /// Socket que gerou a conexão
         /// </summary>
-        private readonly IAsyncSocket asyncSocket;
+        internal readonly IAsyncSocket AsyncSocket;
+
+        /// <summary>
+        /// Gerencia a forma como os dados devem ser recebidos
+        /// </summary>
+        private readonly IReceive receiveManager;
+
+        /// <summary>
+        /// Gerencia a forma como os dados devem ser enviados
+        /// </summary>
+        private readonly ISend sendManager;
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="asyncServerSocket"></param>
+        /// <param name="cfg"></param>
         /// <param name="socket"></param>
         /// <param name="buffer"></param>
-        internal AsyncState(IAsyncSocket asyncServerSocket, Socket socket, byte[] buffer)
+        internal AsyncState(IAsyncSocket asyncServerSocket, SocketCfg cfg, Socket socket, byte[] buffer)
         {
-            asyncSocket = asyncServerSocket;
+            AsyncSocket = asyncServerSocket;
             Socket = socket;
             Buffer = buffer;
+
+            switch (cfg.SocketType)
+            {
+                case SocketType.Datagram:
+                    receiveManager = new TcpDatagramReceiveManager(this);
+                    sendManager = new TcpDatagramSendManager(this);
+                    break;
+                case SocketType.Stream:
+                    receiveManager = new TcpStreamReceiveManager(this);
+                    sendManager = new TcpStreamSendManager(this);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
         /// Inicia recebimento de dados de forma assíncrona
         /// </summary>
-        internal void BeginReceive()
+        public void BeginReceive()
         {
-            Socket.BeginReceive(Buffer, 0, Buffer.Length, SocketFlags.None, AsyncReceive, this);
+            receiveManager.BeginReceive();
         }
 
         /// <summary>
         /// Inicia desconexão de forma assíncrona
         /// </summary>
-        private void BeginDisconnect()
+        public void BeginDisconnect()
         {
             Socket.Shutdown(SocketShutdown.Both);
             Socket.BeginDisconnect(false, AsyncDisconnect, this);
         }
 
         /// <summary>
-        /// Recebe dados de forma assíncrona
+        /// Envia dados
         /// </summary>
-        /// <param name="result"></param>
-        private void AsyncReceive(IAsyncResult result)
+        /// <param name="packet"></param>
+        public void Send(byte[] packet)
         {
-            try
-            {
-                SocketError socketError;
+            sendManager.Send(packet);
+        }
 
-                if (!Socket.Connected)
-                    return;
-
-                // representa a quantidade de bytes que foi recebido, caso ocorra erro ele sera armazenado em 'socketError'
-                var size = Socket.EndReceive(result, out socketError);
-
-                if (socketError == SocketError.Success && size != 0)
-                {
-                    ReceivedBuffer = new byte[size];
-                    System.Buffer.BlockCopy(Buffer, 0, ReceivedBuffer, 0, size);
-
-                    asyncSocket.OnReceive(new ReceiveEventArgs(this));
-
-                    BeginReceive();
-                }
-                else
-                {
-                    // se ocorreu erro desconectar
-                    BeginDisconnect();
-                }
-            }
-            catch (SocketException ex)
-            {
-
-            }
+        /// <summary>
+        /// Envia dados de forma assíncrona
+        /// </summary>
+        /// <param name="packet"></param>
+        public void AsyncSend(byte[] packet)
+        {
+            sendManager.AsyncSend(packet);
         }
 
         /// <summary>
@@ -106,7 +119,7 @@ namespace SDP.TCP
             Socket.EndDisconnect(result);
             Socket.Close();
 
-            asyncSocket.OnDisconnect(new ConnectionEventArgs(this));
+            AsyncSocket.OnDisconnect(new ConnectionEventArgs(this));
         }
     }
 }

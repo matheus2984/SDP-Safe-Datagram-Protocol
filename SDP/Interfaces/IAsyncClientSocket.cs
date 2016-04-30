@@ -9,5 +9,11 @@
         /// Inicia tentativa de conexão com o servidor
         /// </summary>
         void BeginConnect();
+
+        /// <summary>
+        /// Envia dados
+        /// </summary>
+        /// <param name="packet"></param>
+        void Send(byte[] packet);
     }
 }

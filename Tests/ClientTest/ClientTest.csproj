@@ -47,7 +47,7 @@
       <Project>{C89E8928-46A4-4C8C-A3E7-DC2569C566F8}</Project>
       <Name>PackageLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SDP\SDP.csproj">
+    <ProjectReference Include="..\..\SDP\SDP.csproj">
       <Project>{39E5AAFB-9059-44F1-869E-C79B69C6D056}</Project>
       <Name>SDP</Name>
     </ProjectReference>

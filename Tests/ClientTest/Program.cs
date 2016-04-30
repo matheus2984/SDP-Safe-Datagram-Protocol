@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text;
+using System.Threading;
 using PackageLibrary;
 using SDP;
 using SDP.Events;
@@ -10,16 +10,30 @@ namespace ClientTest
     internal static class Program
     {
         private static IAsyncClientSocket client;
+        private static ManualResetEvent manualReset;
+
         private static void Main()
         {
+            manualReset = new ManualResetEvent(false);
+
             Console.Title = "TCP - Async Client Socket Test - SDP LIBRARY";
 
-            client = SdpSocket.ClientFactory("25.175.152.176", 9959);
+            var clientCfg = new SocketCfg("25.175.152.176",9959);
+
+            client = SdpSocket.ClientFactory(clientCfg);
             client.Connect += client_Connect;
             client.Receive += client_Receive;
             client.Disconnect += client_Disconnect;
 
             client.BeginConnect();
+
+            manualReset.WaitOne();
+
+            for (int i = 0; i < 50; i++)
+            {
+                var packet = new MessagePacket(i.ToString());
+                client.Send(packet.Serialize());
+            }
 
             while (true)
             {
@@ -29,9 +43,7 @@ namespace ClientTest
         static void client_Connect(object sender, ConnectionEventArgs e)
         {
             Console.WriteLine("Conectei");
-            var packet = new MessagePacket("eae");
-            e.State.Socket.Send(packet.Serialize());
-            Console.WriteLine("Enviei");
+            manualReset.Set();
         }
 
         static void client_Receive(object sender, ReceiveEventArgs e)

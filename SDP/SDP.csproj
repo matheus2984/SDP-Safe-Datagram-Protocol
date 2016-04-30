@@ -34,12 +34,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cfg\TcpCfg.cs" />
+    <Compile Include="SocketCfg.cs" />
     <Compile Include="Interfaces\AsyncSocketBase.cs" />
     <Compile Include="Interfaces\IAsyncClientSocket.cs" />
     <Compile Include="Interfaces\IAsyncServerSocket.cs" />
     <Compile Include="Interfaces\IAsyncSocket.cs" />
+    <Compile Include="Interfaces\IReceive.cs" />
+    <Compile Include="Interfaces\ISend.cs" />
     <Compile Include="SdpSocket.cs" />
+    <Compile Include="Enums\SocketType.cs" />
     <Compile Include="TCP\AsyncClientSocket.cs" />
     <Compile Include="TCP\AsyncState.cs" />
     <Compile Include="Events\ConnectionEventArgs.cs" />
@@ -47,6 +50,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IAsyncState.cs" />
     <Compile Include="TCP\AsyncServerSocket.cs" />
+    <Compile Include="TCP\Managers\TcpDatagramReceiveManager.cs" />
+    <Compile Include="TCP\Managers\TcpDatagramSendManager.cs" />
+    <Compile Include="TCP\Managers\TcpStreamReceiveManager.cs" />
+    <Compile Include="TCP\Managers\TcpStreamSendManager.cs" />
+    <Compile Include="Util\BufferOperation.cs" />
     <Compile Include="Util\Node.cs" />
   </ItemGroup>
   <ItemGroup>

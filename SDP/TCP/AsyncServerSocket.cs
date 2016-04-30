@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using SDP.Events;
@@ -12,20 +13,26 @@ namespace SDP.TCP
     internal class AsyncServerSocket : AsyncSocketBase, IAsyncServerSocket
     {
         /// <summary>
+        /// configurações do socket
+        /// </summary>
+        private readonly SocketCfg cfg;
+
+        /// <summary>
         /// Construtor
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        public AsyncServerSocket(string ip, int port)
+        /// <param name="cfg"></param>
+        public AsyncServerSocket(SocketCfg cfg)
             : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
         {
+            this.cfg = cfg;
+
             // Fecha o soquete normalmente sem remanescentes
             SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
             // Verifica a conexão para checar se a outra se mantem ativa
             SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 
             // define o IP e a Porta em que o servidor ira trabalhar
-            Bind(new IPEndPoint(IPAddress.Parse(ip), port));
+            Bind(new IPEndPoint(IPAddress.Parse(cfg.IP), cfg.Port));
             // limite de conexões que podem existir ao mesmo tempo
             Listen(500);
         }
@@ -35,6 +42,7 @@ namespace SDP.TCP
         /// </summary>
         public void BeginAccept()
         {
+            // chama AsyncAccept
             BeginAccept(AsyncAccept, null);
         }
 
@@ -52,7 +60,7 @@ namespace SDP.TCP
                 if (clientSocket != null)
                 {
                     // cria objeto de conexão
-                    var state = new AsyncState(this, clientSocket, new byte[1024]);
+                    var state = new AsyncState(this,cfg, clientSocket, new byte[1024]);
 
                     // invoca evento de conexão realizada
                     OnConnect(new ConnectionEventArgs(state));
@@ -71,7 +79,7 @@ namespace SDP.TCP
                     ex.SocketErrorCode != SocketError.ConnectionReset &&
                     ex.SocketErrorCode != SocketError.ConnectionAborted &&
                     ex.SocketErrorCode != SocketError.Shutdown)
-                    Console.WriteLine(ex);
+                    Debug.WriteLine(ex);
             }
             finally
             {

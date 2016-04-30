@@ -9,25 +9,23 @@ namespace SDP
     public static class SdpSocket
     {
         /// <summary>
-        /// Responsavel por criar o socket de servidor de acordo com a configuração especificada pelos parametros
+        /// Responsavel por criar o socket de servidor de acordo com a configuração especificada pelo parametro
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
+        /// <param name="cfg"></param>
         /// <returns></returns>
-        public static IAsyncServerSocket ServerFactory(string ip, int port)
+        public static IAsyncServerSocket ServerFactory(SocketCfg cfg)
         {
-            return new AsyncServerSocket(ip, port); // Retorna um novo socket de servidor TCP. Unico implementado atualmente
+            return new AsyncServerSocket(cfg); // Retorna um novo socket de servidor TCP. Unico implementado atualmente
         }
 
         /// <summary>
         /// Responsavel por criar o socket de cliente de acordo com a configuração especificada pelos parametros
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
+        /// <param name="cfg"></param>
         /// <returns></returns>
-        public static IAsyncClientSocket ClientFactory(string ip, int port)
+        public static IAsyncClientSocket ClientFactory(SocketCfg cfg)
         {
-            return new AsyncClientSocket(ip, port); // Retorna um novo socket de cliente TCP. Unico implementado atualmente
+            return new AsyncClientSocket(cfg); // Retorna um novo socket de cliente TCP. Unico implementado atualmente
         }
     }
 }

@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Net.Sockets;
 using SDP.Util;
+using SocketType = SDP.Enums.SocketType;
 
-namespace SDP.Cfg
+namespace SDP
 {
     /// <summary>
     /// Classe de configuração para a criação de sockets referentes a SdpSocket
     /// </summary>
-    public class TcpCfg
+    public class SocketCfg
     {
         /// <summary>
         /// Endereço
         /// </summary>
-        public string IP { get; set; }
+        public string IP { get; private set; }
 
         /// <summary>
         /// Porta
         /// </summary>
-        public int Port { get; set; }
+        public int Port { get; private set; }
 
         /// <summary>
         /// Algoritmo de controle de fluxo
@@ -47,9 +48,11 @@ namespace SDP.Cfg
         /// <summary>
         /// Construtor
         /// </summary>
-        public TcpCfg()
+        public SocketCfg(string ip, int port)
         {
             socketOptionList=new List<Node<SocketOptionLevel, SocketOptionName>>();
+            IP = ip;
+            Port = port;
         }
 
         /// <summary>

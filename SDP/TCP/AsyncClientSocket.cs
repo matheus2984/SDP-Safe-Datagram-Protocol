@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using SDP.Events;
@@ -17,20 +18,31 @@ namespace SDP.TCP
         private readonly IPEndPoint ipEndPoint;
 
         /// <summary>
+        /// Configurações do socket
+        /// </summary>
+        private readonly SocketCfg cfg;
+
+        /// <summary>
+        /// Objeto de conexão
+        /// </summary>
+        private IAsyncState asyncState;
+
+        /// <summary>
         /// Construtor
         /// </summary>
-        /// <param name="serverIP"></param>
-        /// <param name="port"></param>
-        public AsyncClientSocket(string serverIP, int port)
+        /// <param name="cfg"></param>
+        public AsyncClientSocket(SocketCfg cfg)
             : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
-        { 
+        {
+            this.cfg = cfg;
+
             // Fecha o soquete normalmente sem remanescentes
             SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
             // Verifica a conexão para checar se a outra se mantem ativa
             SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 
             // Representa o ponto de conexão (IP e Porta) do servidor
-            ipEndPoint = new IPEndPoint(IPAddress.Parse(serverIP), port);
+            ipEndPoint = new IPEndPoint(IPAddress.Parse(cfg.IP), cfg.Port);
         }
 
         /// <summary>
@@ -38,7 +50,10 @@ namespace SDP.TCP
         /// </summary>
         public void BeginConnect()
         {
-            BeginConnect(ipEndPoint, AsyncConnect, new AsyncState(this, this, new byte[1024]));
+            // cria objeto de conexão
+            asyncState = new AsyncState(this, cfg, this, new byte[1024]);
+            // chama AsyncConnect
+            BeginConnect(ipEndPoint, AsyncConnect, asyncState);
         }
 
         /// <summary>
@@ -77,8 +92,17 @@ namespace SDP.TCP
                     e.SocketErrorCode != SocketError.ConnectionReset &&
                     e.SocketErrorCode != SocketError.ConnectionAborted &&
                     e.SocketErrorCode != SocketError.Shutdown)
-                    Console.WriteLine(e);
+                    Debug.WriteLine(e);
             }
+        }
+
+        /// <summary>
+        /// Envia dados
+        /// </summary>
+        /// <param name="packet"></param>
+        public new void Send(byte[] packet)
+        {
+            asyncState.Send(packet);
         }
     }
 }

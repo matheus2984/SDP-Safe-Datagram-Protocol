@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Sockets;
 using SDP.Util;
-using SocketType = SDP.Enums.SocketType;
 using ProtocolType = SDP.Enums.ProtocolType;
+using SocketType = SDP.Enums.SocketType;
 
 namespace SDP
 {

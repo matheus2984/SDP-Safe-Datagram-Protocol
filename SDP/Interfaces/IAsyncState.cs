@@ -1,6 +1,4 @@
-﻿using System.Net.Sockets;
-
-namespace SDP.Interfaces
+﻿namespace SDP.Interfaces
 {
     /// <summary>
     /// Interface que expõe os elementos indispensaveis para classes de AsyncState/Cliente

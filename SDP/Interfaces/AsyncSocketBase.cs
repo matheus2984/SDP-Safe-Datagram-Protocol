@@ -50,7 +50,8 @@ namespace SDP.Interfaces
         /// <param name="addressFamily"></param>
         /// <param name="socketType"></param>
         /// <param name="protocolType"></param>
-        protected AsyncSocketBase(AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType)
+        protected AsyncSocketBase(AddressFamily addressFamily, SocketType socketType,
+            ProtocolType protocolType)
             : base(addressFamily, socketType, protocolType)
         {
 

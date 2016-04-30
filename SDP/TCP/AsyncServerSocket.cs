@@ -68,9 +68,6 @@ namespace SDP.TCP
                     // inicia recebimento assincrono de dados do usuario conectado
                     state.BeginReceive(); 
                 }
-
-                // volta a aceitar novas conexões
-                BeginAccept(); 
             }
             catch (SocketException ex)
             {
@@ -83,7 +80,7 @@ namespace SDP.TCP
             }
             finally
             {
-                // mesmo que ocorra um erro volta a aceitar novas conexões
+                // volta a aceitar novas conexões
                 BeginAccept();
             }
         }

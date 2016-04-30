@@ -5,7 +5,7 @@ using SDP.Interfaces;
 
 namespace SDP.TCP.Managers
 {
-    public class TcpStreamSendManager:ISend
+    internal class TcpStreamSendManager:ISend
     {
         /// <summary>
         /// Objeto de conexão

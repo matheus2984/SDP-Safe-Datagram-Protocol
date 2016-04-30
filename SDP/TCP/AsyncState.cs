@@ -10,7 +10,7 @@ namespace SDP.TCP
     /// <summary>
     /// Objeto que representa uma conexão realizada
     /// </summary>
-    public class AsyncState : IAsyncState, IReceive, ISend
+    internal class AsyncState : IAsyncState, IReceive, ISend
     {
         /// <summary>
         /// Socket da conexão

@@ -3,8 +3,16 @@ using System.Linq;
 
 namespace SDP.Util
 {
+    /// <summary>
+    /// Operações com byte[]
+    /// </summary>
     public static class BufferOperation
     {
+        /// <summary>
+        /// Combina dois ou mais buffers de byte[]
+        /// </summary>
+        /// <param name="dataArgs"></param>
+        /// <returns></returns>
         public static byte[] Combine(params byte[][] dataArgs)
         {
             int currentOffset = 0;

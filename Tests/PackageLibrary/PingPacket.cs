@@ -4,14 +4,12 @@ namespace PackageLibrary
 {
     public class PingPacket:PacketStructure<PingPacket>
     {
-        private ushort PacketLength { get; set; }
         public PacketType PacketType { get; set; }
         public ushort ArraySize { get; set; }
         public byte[] Array { get; set; }
 
-        public PingPacket(ushort pingSize) : base(2+1+2+pingSize)
+        public PingPacket(ushort pingSize) : base(1+2+pingSize)
         {
-            PacketLength = (ushort)(2+1+2+pingSize);
             PacketType = PacketType.PingPacket;
             ArraySize = pingSize;
             Array = new byte[pingSize];
@@ -24,7 +22,6 @@ namespace PackageLibrary
 
         public override byte[] Serialize()
         {
-            Write(PacketLength);
             Write((byte) PacketType);
             Write(ArraySize);
             for (var i = 0; i < Array.Length; i++)
@@ -35,7 +32,6 @@ namespace PackageLibrary
 
         public override PingPacket Deserialize()
         {
-            PacketLength = ReadUShort();
             PacketType = (PacketType) ReadByte();
             ArraySize = ReadUShort();
 

@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using SDP.Util;
 using SocketType = SDP.Enums.SocketType;
+using ProtocolType = SDP.Enums.ProtocolType;
 
 namespace SDP
 {
@@ -48,7 +49,7 @@ namespace SDP
         /// <summary>
         /// Construtor
         /// </summary>
-        public SocketCfg(string ip, int port)
+        public SocketCfg(string ip, int port, ProtocolType protocolType)
         {
             socketOptionList=new List<Node<SocketOptionLevel, SocketOptionName>>();
             IP = ip;

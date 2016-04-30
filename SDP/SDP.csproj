@@ -34,6 +34,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ProtocolType.cs" />
     <Compile Include="SocketCfg.cs" />
     <Compile Include="Interfaces\AsyncSocketBase.cs" />
     <Compile Include="Interfaces\IAsyncClientSocket.cs" />

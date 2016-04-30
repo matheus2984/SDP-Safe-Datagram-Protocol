@@ -1,4 +1,6 @@
-﻿using SDP.Interfaces;
+﻿using System;
+using SDP.Enums;
+using SDP.Interfaces;
 using SDP.TCP;
 
 namespace SDP
@@ -9,23 +11,45 @@ namespace SDP
     public static class SdpSocket
     {
         /// <summary>
-        /// Responsavel por criar o socket de servidor de acordo com a configuração especificada pelo parametro
+        /// Responsavel por criar o sockets de servidor
         /// </summary>
         /// <param name="cfg"></param>
         /// <returns></returns>
         public static IAsyncServerSocket ServerFactory(SocketCfg cfg)
         {
-            return new AsyncServerSocket(cfg); // Retorna um novo socket de servidor TCP. Unico implementado atualmente
+            // retorna um novo socket de servidor de acordo com o protocolo definido na configuração
+            switch (cfg.ProtocolType)
+            {
+                case ProtocolType.TCP:
+                    return new AsyncServerSocket(cfg);
+                case ProtocolType.UDP:
+                    throw new NotImplementedException();
+                case ProtocolType.SDP:
+                    throw new NotImplementedException();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
-        /// Responsavel por criar o socket de cliente de acordo com a configuração especificada pelos parametros
+        /// Responsavel por criar sockets de cliente
         /// </summary>
         /// <param name="cfg"></param>
         /// <returns></returns>
         public static IAsyncClientSocket ClientFactory(SocketCfg cfg)
         {
-            return new AsyncClientSocket(cfg); // Retorna um novo socket de cliente TCP. Unico implementado atualmente
+            // retorna um novo socket de cliente de acordo com o protocolo definido na configuração
+            switch (cfg.ProtocolType)
+            {
+                case ProtocolType.TCP:
+                    return new AsyncClientSocket(cfg);
+                case ProtocolType.UDP:
+                    throw new NotImplementedException();
+                case ProtocolType.SDP:
+                    throw new NotImplementedException();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading;
 using PackageLibrary;
 using SDP;
+using SDP.Enums;
 using SDP.Events;
 using SDP.Interfaces;
 
@@ -18,7 +19,7 @@ namespace ClientTest
 
             Console.Title = "TCP - Async Client Socket Test - SDP LIBRARY";
 
-            var clientCfg = new SocketCfg("25.175.152.176",9959);
+            var clientCfg = new SocketCfg("127.0.0.1", 9959, ProtocolType.TCP);
 
             client = SdpSocket.ClientFactory(clientCfg);
             client.Connect += client_Connect;
@@ -40,6 +41,7 @@ namespace ClientTest
                 Console.ReadKey();
             }
         }
+
         static void client_Connect(object sender, ConnectionEventArgs e)
         {
             Console.WriteLine("Conectei");

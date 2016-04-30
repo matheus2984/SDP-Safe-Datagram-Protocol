@@ -26,17 +26,20 @@ namespace SDP.TCP.Managers
         {
             try
             {
+                // cria o cabeçalho
                 byte[] header = CreateHeader(packet);
+                // combina o corpo do pacote com o cabeçalho
                 byte[] finalPacket = BufferOperation.Combine(header, packet);
+
                 asyncState.Socket.Send(finalPacket);
             }
             catch (SocketException ex)
             {
                 if (ex.SocketErrorCode != SocketError.Disconnecting &&
-                ex.SocketErrorCode != SocketError.NotConnected &&
-                ex.SocketErrorCode != SocketError.ConnectionReset &&
-                ex.SocketErrorCode != SocketError.ConnectionAborted &&
-                ex.SocketErrorCode != SocketError.Shutdown)
+                    ex.SocketErrorCode != SocketError.NotConnected &&
+                    ex.SocketErrorCode != SocketError.ConnectionReset &&
+                    ex.SocketErrorCode != SocketError.ConnectionAborted &&
+                    ex.SocketErrorCode != SocketError.Shutdown)
                     Debug.WriteLine(ex);
             }
         }
@@ -49,8 +52,11 @@ namespace SDP.TCP.Managers
         {
             try
             {
+                // cria o cabeçalho
                 byte[] header = CreateHeader(packet);
+                // combina o corpo do pacote com o cabeçalho
                 byte[] finalPacket = BufferOperation.Combine(header, packet);
+
                 asyncState.Socket.BeginSend(finalPacket, 0, finalPacket.Length, SocketFlags.None, AsyncSend, this);
             }
             catch (SocketException ex)

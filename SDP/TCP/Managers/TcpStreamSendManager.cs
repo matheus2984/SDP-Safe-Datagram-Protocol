@@ -25,7 +25,7 @@ namespace SDP.TCP.Managers
         {
             try
             {
-                asyncState.Socket.Send(packet);
+                    asyncState.Socket.Send(packet);
             }
             catch (SocketException ex)
             {

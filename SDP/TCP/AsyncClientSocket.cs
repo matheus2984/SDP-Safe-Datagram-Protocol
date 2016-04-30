@@ -34,6 +34,7 @@ namespace SDP.TCP
         public AsyncClientSocket(SocketCfg cfg)
             : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
         {
+            // objeto de configuração do socket
             this.cfg = cfg;
 
             // Fecha o soquete normalmente sem remanescentes

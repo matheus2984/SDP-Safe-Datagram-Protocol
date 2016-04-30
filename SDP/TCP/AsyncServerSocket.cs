@@ -54,7 +54,7 @@ namespace SDP.TCP
         {
             try
             {
-                // recebe o socket referido ao usuario que realizou a conexão
+                // recebe o socket referentee ao usuario que realizou a conexão
                 var clientSocket = EndAccept(result); 
 
                 if (clientSocket != null)

@@ -1,0 +1,5 @@
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\SDP\bin\Debug\SDP.dll
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\SDP\bin\Debug\SDP.pdb
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\SDP\obj\Debug\SDP.csprojResolveAssemblyReference.cache
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\SDP\obj\Debug\SDP.dll
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\SDP\obj\Debug\SDP.pdb

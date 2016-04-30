@@ -1,0 +1,10 @@
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\bin\Debug\ClientTest.exe.config
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\bin\Debug\ClientTest.exe
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\bin\Debug\ClientTest.pdb
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\obj\Debug\ClientTest.exe
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\obj\Debug\ClientTest.pdb
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\bin\Debug\SDP.dll
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\bin\Debug\SDP.pdb
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\obj\Debug\ClientTest.csprojResolveAssemblyReference.cache
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\bin\Debug\PackageLibrary.dll
+C:\Users\Ademario\Desktop\SDP - Safe Datagram Protocol\ClientTest\bin\Debug\PackageLibrary.pdb

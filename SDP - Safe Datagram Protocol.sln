@@ -7,11 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP", "SDP\SDP.csproj", "{3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{5E5D3E67-4755-43BF-89F5-1B510A74BAA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTest", "ServerTest\ServerTest.csproj", "{2FADE8CF-E7E3-41CE-84B7-5F540749B7D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTest", "Tests\ServerTest\ServerTest.csproj", "{2FADE8CF-E7E3-41CE-84B7-5F540749B7D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTest", "ClientTest\ClientTest.csproj", "{0FAD4BBF-46B2-428B-9C0F-488CFA6436B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTest", "Tests\ClientTest\ClientTest.csproj", "{0FAD4BBF-46B2-428B-9C0F-488CFA6436B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageLibrary", "PackageLibrary\PackageLibrary.csproj", "{C89E8928-46A4-4C8C-A3E7-DC2569C566F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageLibrary", "Tests\PackageLibrary\PackageLibrary.csproj", "{C89E8928-46A4-4C8C-A3E7-DC2569C566F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

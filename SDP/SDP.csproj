@@ -35,6 +35,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ProtocolType.cs" />
+    <Compile Include="Interfaces\IAccept.cs" />
+    <Compile Include="Interfaces\IConnect.cs" />
     <Compile Include="SocketCfg.cs" />
     <Compile Include="Interfaces\AsyncSocketBase.cs" />
     <Compile Include="Interfaces\IAsyncClientSocket.cs" />
@@ -44,22 +46,25 @@
     <Compile Include="Interfaces\ISend.cs" />
     <Compile Include="SdpSocket.cs" />
     <Compile Include="Enums\SocketType.cs" />
-    <Compile Include="TCP\AsyncClientSocket.cs" />
-    <Compile Include="TCP\AsyncState.cs" />
+    <Compile Include="Socket\AsyncClientSocket.cs" />
+    <Compile Include="Socket\AsyncState.cs" />
     <Compile Include="Events\ConnectionEventArgs.cs" />
     <Compile Include="Events\ReceiveEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IAsyncState.cs" />
-    <Compile Include="TCP\AsyncServerSocket.cs" />
-    <Compile Include="TCP\Managers\TcpDatagramReceiveManager.cs" />
-    <Compile Include="TCP\Managers\TcpDatagramSendManager.cs" />
-    <Compile Include="TCP\Managers\TcpStreamReceiveManager.cs" />
-    <Compile Include="TCP\Managers\TcpStreamSendManager.cs" />
+    <Compile Include="Socket\AsyncServerSocket.cs" />
+    <Compile Include="Modules\TCP\TcpAcceptModule.cs" />
+    <Compile Include="Modules\TCP\TcpConnectModule.cs" />
+    <Compile Include="Modules\TCP\TcpDatagramReceiveModule.cs" />
+    <Compile Include="Modules\TCP\TcpDatagramSendModule.cs" />
+    <Compile Include="Modules\TCP\TcpStreamReceiveModule.cs" />
+    <Compile Include="Modules\TCP\TcpStreamSendModule.cs" />
     <Compile Include="Util\BufferOperation.cs" />
     <Compile Include="Util\Node.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UDP\" />
+    <Folder Include="Modules\SDP\" />
+    <Folder Include="Modules\UDP\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

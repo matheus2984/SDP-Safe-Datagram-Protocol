@@ -1,49 +1,25 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net;
 using System.Net.Sockets;
 using SDP.Events;
 using SDP.Interfaces;
+using SDP.Socket;
 
-namespace SDP.TCP
+namespace SDP.Modules.TCP
 {
     /// <summary>
-    /// Socket de cliente TCP assíncrono
+    /// Modulo de conexão
     /// </summary>
-    internal class AsyncClientSocket : AsyncSocketBase, IAsyncClientSocket
-    {
-        /// <summary>
-        /// Representa o ponto de conexão (IP e Porta) do servidor
-        /// </summary>
-        private readonly IPEndPoint ipEndPoint;
-
-        /// <summary>
-        /// Configurações do socket
-        /// </summary>
-        private readonly SocketCfg cfg;
-
+    internal class TcpConnectModule:IConnect
+    {    
         /// <summary>
         /// Objeto de conexão
         /// </summary>
-        private IAsyncState asyncState;
+        private readonly AsyncClientSocket clientHost;
 
-        /// <summary>
-        /// Construtor
-        /// </summary>
-        /// <param name="cfg"></param>
-        public AsyncClientSocket(SocketCfg cfg)
-            : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+        public TcpConnectModule(AsyncClientSocket client)
         {
-            // objeto de configuração do socket
-            this.cfg = cfg;
-
-            // Fecha o soquete normalmente sem remanescentes
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-            // Verifica a conexão para checar se a outra se mantem ativa
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-
-            // Representa o ponto de conexão (IP e Porta) do servidor
-            ipEndPoint = new IPEndPoint(IPAddress.Parse(cfg.IP), cfg.Port);
+            clientHost = client;
         }
 
         /// <summary>
@@ -52,9 +28,9 @@ namespace SDP.TCP
         public void BeginConnect()
         {
             // cria objeto de conexão
-            asyncState = new AsyncState(this, cfg, this, new byte[1024]);
+            clientHost.AsyncState = new AsyncState(clientHost, clientHost.Cfg, clientHost, new byte[1024]);
             // chama AsyncConnect
-            BeginConnect(ipEndPoint, AsyncConnect, asyncState);
+            clientHost.BeginConnect(clientHost.IpEndPoint, AsyncConnect, clientHost.AsyncState);
         }
 
         /// <summary>
@@ -66,7 +42,7 @@ namespace SDP.TCP
             try
             {
                 // objeto de conexão
-                var state = (AsyncState) result.AsyncState;
+                var state = (AsyncState)result.AsyncState;
 
                 try
                 {
@@ -81,7 +57,7 @@ namespace SDP.TCP
                 if (!state.Socket.Connected) return;
 
                 // invoca evento de conexão realizada com sucesso
-                OnConnect(new ConnectionEventArgs(state));
+                clientHost.OnConnect(new ConnectionEventArgs(state));
 
                 // inicia recebimento assíncrono
                 state.BeginReceive();
@@ -95,15 +71,6 @@ namespace SDP.TCP
                     e.SocketErrorCode != SocketError.Shutdown)
                     Debug.WriteLine(e);
             }
-        }
-
-        /// <summary>
-        /// Envia dados
-        /// </summary>
-        /// <param name="packet"></param>
-        public new void Send(byte[] packet)
-        {
-            asyncState.Send(packet);
         }
     }
 }

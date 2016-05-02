@@ -2,10 +2,10 @@
 using System.Net.Sockets;
 using SDP.Events;
 using SDP.Interfaces;
-using SDP.TCP.Managers;
+using SDP.Modules.TCP;
 using SocketType = SDP.Enums.SocketType;
 
-namespace SDP.TCP
+namespace SDP.Socket
 {
     /// <summary>
     /// Objeto que representa uma conexão realizada
@@ -15,7 +15,7 @@ namespace SDP.TCP
         /// <summary>
         /// Socket da conexão
         /// </summary>
-        internal Socket Socket { get; private set; }
+        internal System.Net.Sockets.Socket Socket { get; private set; }
 
         /// <summary>
         /// Buffer de recebimento de dados
@@ -40,12 +40,12 @@ namespace SDP.TCP
         /// <summary>
         /// Gerencia a forma como os dados devem ser recebidos
         /// </summary>
-        private readonly IReceive receiveManager;
+        private readonly IReceive receiveModule;
 
         /// <summary>
         /// Gerencia a forma como os dados devem ser enviados
         /// </summary>
-        private readonly ISend sendManager;
+        private readonly ISend sendModule;
 
         /// <summary>
         /// Construtor
@@ -54,7 +54,7 @@ namespace SDP.TCP
         /// <param name="cfg"></param>
         /// <param name="socket"></param>
         /// <param name="buffer"></param>
-        internal AsyncState(IAsyncSocket asyncServerSocket, SocketCfg cfg, Socket socket, byte[] buffer)
+        internal AsyncState(IAsyncSocket asyncServerSocket, SocketCfg cfg, System.Net.Sockets.Socket socket, byte[] buffer)
         {
             AsyncSocket = asyncServerSocket;
             Socket = socket;
@@ -63,12 +63,12 @@ namespace SDP.TCP
             switch (cfg.SocketType)
             {
                 case SocketType.Datagram:
-                    receiveManager = new TcpDatagramReceiveManager(this);
-                    sendManager = new TcpDatagramSendManager(this);
+                    receiveModule = new TcpDatagramReceiveModule(this);
+                    sendModule = new TcpDatagramSendModule(this);
                     break;
                 case SocketType.Stream:
-                    receiveManager = new TcpStreamReceiveManager(this);
-                    sendManager = new TcpStreamSendManager(this);
+                    receiveModule = new TcpStreamReceiveModule(this);
+                    sendModule = new TcpStreamSendModule(this);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -80,7 +80,7 @@ namespace SDP.TCP
         /// </summary>
         public void BeginReceive()
         {
-            receiveManager.BeginReceive();
+            receiveModule.BeginReceive();
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace SDP.TCP
         /// <param name="packet"></param>
         public void Send(byte[] packet)
         {
-            sendManager.Send(packet);
+            sendModule.Send(packet);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace SDP.TCP
         /// <param name="packet"></param>
         public void AsyncSend(byte[] packet)
         {
-            sendManager.AsyncSend(packet);
+            sendModule.AsyncSend(packet);
         }
 
         /// <summary>

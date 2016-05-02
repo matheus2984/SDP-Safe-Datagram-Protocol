@@ -3,40 +3,33 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using SDP.Events;
 using SDP.Interfaces;
+using SDP.Socket;
 
-namespace SDP.TCP.Managers
+namespace SDP.Modules.TCP
 {
     /// <summary>
-    /// Classe resposavel por gerenciar o recebimento de dados no formato de datagramas
+    /// Modulo de recebimento de dados do tipo datagrama
     /// </summary>
-    internal class TcpDatagramReceiveManager : IReceive
+    internal class TcpDatagramReceiveModule : IReceive
     {
         /// <summary>
-        /// Objeto de conexão
+        ///     Objeto de conexão
         /// </summary>
         private readonly AsyncState asyncState;
 
         /// <summary>
-        /// Construtor
+        ///     Construtor
         /// </summary>
         /// <param name="state"></param>
-        public TcpDatagramReceiveManager(AsyncState state)
+        public TcpDatagramReceiveModule(AsyncState state)
         {
             asyncState = state;
         }
 
         /// <summary>
-        /// Inicia recebimento de dados de forma assíncrona
-        /// </summary>
-        public void BeginReceive()
-        {
-            asyncState.Socket.BeginReceive(asyncState.Buffer, 0, 2, SocketFlags.None, AsyncReceiveHeader, asyncState);
-        }
-
-        /// <summary>
-        /// Recebe os 2 primeiros bytes do pacote (cabeçalho) de forma assincrona
-        /// estes bytes representam o tamanho do resto do pacote
-        /// isso é necessario para realizar a quebra da stream em datagramas
+        ///     Recebe os 2 primeiros bytes do pacote (cabeçalho) de forma assincrona
+        ///     estes bytes representam o tamanho do resto do pacote
+        ///     isso é necessario para realizar a quebra da stream em datagramas
         /// </summary>
         /// <param name="result"></param>
         private void AsyncReceiveHeader(IAsyncResult result)
@@ -49,7 +42,7 @@ namespace SDP.TCP.Managers
                     return;
 
                 // representa a quantidade de bytes que foi recebido, caso ocorra erro ele sera armazenado em 'socketError'
-                var size = asyncState.Socket.EndReceive(result, out socketError);
+                int size = asyncState.Socket.EndReceive(result, out socketError);
 
                 if (socketError == SocketError.Success && size == 2)
                 {
@@ -74,16 +67,16 @@ namespace SDP.TCP.Managers
             catch (SocketException ex)
             {
                 if (ex.SocketErrorCode != SocketError.Disconnecting &&
-                ex.SocketErrorCode != SocketError.NotConnected &&
-                ex.SocketErrorCode != SocketError.ConnectionReset &&
-                ex.SocketErrorCode != SocketError.ConnectionAborted &&
-                ex.SocketErrorCode != SocketError.Shutdown)
+                    ex.SocketErrorCode != SocketError.NotConnected &&
+                    ex.SocketErrorCode != SocketError.ConnectionReset &&
+                    ex.SocketErrorCode != SocketError.ConnectionAborted &&
+                    ex.SocketErrorCode != SocketError.Shutdown)
                     Debug.WriteLine(ex);
             }
         }
 
         /// <summary>
-        /// Recebe o resto do pacote, ou seja o conteudo real do pacote
+        ///     Recebe o resto do pacote, ou seja o conteudo real do pacote
         /// </summary>
         /// <param name="result"></param>
         private void AsyncReceiveBody(IAsyncResult result)
@@ -96,13 +89,13 @@ namespace SDP.TCP.Managers
                     return;
 
                 // representa a quantidade de bytes que foi recebido, caso ocorra erro ele sera armazenado em 'socketError'
-                var size = asyncState.Socket.EndReceive(result, out socketError);
+                int size = asyncState.Socket.EndReceive(result, out socketError);
 
                 if (socketError == SocketError.Success && size != 0)
                 {
                     // chama evento de recebimento
                     asyncState.AsyncSocket.OnReceive(new ReceiveEventArgs(asyncState));
-                    
+
                     // volta a receber dados
                     BeginReceive();
                 }
@@ -115,12 +108,20 @@ namespace SDP.TCP.Managers
             catch (SocketException ex)
             {
                 if (ex.SocketErrorCode != SocketError.Disconnecting &&
-                ex.SocketErrorCode != SocketError.NotConnected &&
-                ex.SocketErrorCode != SocketError.ConnectionReset &&
-                ex.SocketErrorCode != SocketError.ConnectionAborted &&
-                ex.SocketErrorCode != SocketError.Shutdown)
+                    ex.SocketErrorCode != SocketError.NotConnected &&
+                    ex.SocketErrorCode != SocketError.ConnectionReset &&
+                    ex.SocketErrorCode != SocketError.ConnectionAborted &&
+                    ex.SocketErrorCode != SocketError.Shutdown)
                     Debug.WriteLine(ex);
             }
+        }
+
+        /// <summary>
+        ///     Inicia recebimento de dados de forma assíncrona
+        /// </summary>
+        public void BeginReceive()
+        {
+            asyncState.Socket.BeginReceive(asyncState.Buffer, 0, 2, SocketFlags.None, AsyncReceiveHeader, asyncState);
         }
     }
 }

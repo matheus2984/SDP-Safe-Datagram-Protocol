@@ -1,7 +1,7 @@
 ﻿using System;
 using SDP.Enums;
 using SDP.Interfaces;
-using SDP.TCP;
+using SDP.Socket;
 
 namespace SDP
 {
@@ -9,7 +9,7 @@ namespace SDP
     /// Classe Factory responsavel por criar os Sockets e retornar apenas o necessario para sua manipulação
     /// </summary>
     public static class SdpSocket
-    {
+    {   
         /// <summary>
         /// Responsavel por criar o sockets de servidor
         /// </summary>

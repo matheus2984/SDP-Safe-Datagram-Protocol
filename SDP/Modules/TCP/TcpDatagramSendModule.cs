@@ -2,24 +2,60 @@
 using System.Diagnostics;
 using System.Net.Sockets;
 using SDP.Interfaces;
+using SDP.Socket;
 using SDP.Util;
 
-namespace SDP.TCP.Managers
+namespace SDP.Modules.TCP
 {
-    internal class TcpDatagramSendManager : ISend
+    /// <summary>
+    /// Modulo de envio de dados do tipo datagrama
+    /// </summary>
+    internal class TcpDatagramSendModule : ISend
     {
         /// <summary>
-        /// Objeto de conexão
+        ///     Objeto de conexão
         /// </summary>
         private readonly AsyncState asyncState;
 
-        public TcpDatagramSendManager(AsyncState state)
+        public TcpDatagramSendModule(AsyncState state)
         {
             asyncState = state;
         }
 
         /// <summary>
-        /// Envia dados
+        ///     Finaliza o envio de dados de forma assíncrona
+        /// </summary>
+        /// <param name="result"></param>
+        private void AsyncSend(IAsyncResult result)
+        {
+            try
+            {
+                asyncState.Socket.EndSend(result);
+            }
+            catch (SocketException ex)
+            {
+                if (ex.SocketErrorCode != SocketError.Disconnecting &&
+                    ex.SocketErrorCode != SocketError.NotConnected &&
+                    ex.SocketErrorCode != SocketError.ConnectionReset &&
+                    ex.SocketErrorCode != SocketError.ConnectionAborted &&
+                    ex.SocketErrorCode != SocketError.Shutdown)
+                    Debug.WriteLine(ex);
+            }
+        }
+
+        /// <summary>
+        ///     Cria cabeçalho para o pacote recebido como parametro
+        /// </summary>
+        /// <param name="packet"></param>
+        /// <returns></returns>
+        private byte[] CreateHeader(byte[] packet)
+        {
+            byte[] header = BitConverter.GetBytes((ushort) packet.Length);
+            return header;
+        }
+
+        /// <summary>
+        ///     Envia dados
         /// </summary>
         /// <param name="packet"></param>
         public void Send(byte[] packet)
@@ -45,7 +81,7 @@ namespace SDP.TCP.Managers
         }
 
         /// <summary>
-        /// Envia dados de forma assíncrona
+        ///     Envia dados de forma assíncrona
         /// </summary>
         /// <param name="packet"></param>
         public void AsyncSend(byte[] packet)
@@ -68,38 +104,6 @@ namespace SDP.TCP.Managers
                     ex.SocketErrorCode != SocketError.Shutdown)
                     Debug.WriteLine(ex);
             }
-        }
-
-        /// <summary>
-        /// Finaliza o envio de dados de forma assíncrona
-        /// </summary>
-        /// <param name="result"></param>
-        private void AsyncSend(IAsyncResult result)
-        {
-            try
-            {
-                asyncState.Socket.EndSend(result);
-            }
-            catch (SocketException ex)
-            {
-                if (ex.SocketErrorCode != SocketError.Disconnecting &&
-                    ex.SocketErrorCode != SocketError.NotConnected &&
-                    ex.SocketErrorCode != SocketError.ConnectionReset &&
-                    ex.SocketErrorCode != SocketError.ConnectionAborted &&
-                    ex.SocketErrorCode != SocketError.Shutdown)
-                    Debug.WriteLine(ex);
-            }
-        }
-
-        /// <summary>
-        /// Cria cabeçalho para o pacote recebido como parametro
-        /// </summary>
-        /// <param name="packet"></param>
-        /// <returns></returns>
-        private byte[] CreateHeader(byte[] packet)
-        {
-            byte[] header = BitConverter.GetBytes((ushort) (packet.Length));
-            return header;
         }
     }
 }

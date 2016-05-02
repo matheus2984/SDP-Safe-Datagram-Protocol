@@ -1,40 +1,29 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net;
 using System.Net.Sockets;
 using SDP.Events;
 using SDP.Interfaces;
+using SDP.Socket;
 
-namespace SDP.TCP
+namespace SDP.Modules.TCP
 {
     /// <summary>
-    /// Socket de servidor TCP assincrono
+    /// Modulo de escuta de novas conexões
     /// </summary>
-    internal class AsyncServerSocket : AsyncSocketBase, IAsyncServerSocket
+    internal class TcpAcceptModule:IAccept
     {
         /// <summary>
-        /// configurações do socket
+        /// Servidor host
         /// </summary>
-        private readonly SocketCfg cfg;
+        private readonly AsyncServerSocket server;
 
         /// <summary>
         /// Construtor
         /// </summary>
-        /// <param name="cfg"></param>
-        public AsyncServerSocket(SocketCfg cfg)
-            : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+        /// <param name="server"></param>
+        internal TcpAcceptModule(AsyncServerSocket server)
         {
-            this.cfg = cfg;
-
-            // Fecha o soquete normalmente sem remanescentes
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-            // Verifica a conexão para checar se a outra se mantem ativa
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-
-            // define o IP e a Porta em que o servidor ira trabalhar
-            Bind(new IPEndPoint(IPAddress.Parse(cfg.IP), cfg.Port));
-            // limite de conexões que podem existir ao mesmo tempo
-            Listen(500);
+            this.server = server;
         }
 
         /// <summary>
@@ -43,30 +32,30 @@ namespace SDP.TCP
         public void BeginAccept()
         {
             // chama AsyncAccept
-            BeginAccept(AsyncAccept, null);
+            server.BeginAccept(AsyncAccept, null);
         }
 
         /// <summary>
         /// Aceita uma conexão de forma assincrona
         /// </summary>
         /// <param name="result"></param>
-        public void AsyncAccept(IAsyncResult result)
+        private void AsyncAccept(IAsyncResult result)
         {
             try
             {
                 // recebe o socket referentee ao usuario que realizou a conexão
-                var clientSocket = EndAccept(result); 
+                var clientSocket = server.EndAccept(result);
 
                 if (clientSocket != null)
                 {
                     // cria objeto de conexão
-                    var state = new AsyncState(this,cfg, clientSocket, new byte[1024]);
+                    var state = new AsyncState(server, server.Cfg, clientSocket, new byte[1024]);
 
                     // invoca evento de conexão realizada
-                    OnConnect(new ConnectionEventArgs(state));
+                    server.OnConnect(new ConnectionEventArgs(state));
 
                     // inicia recebimento assincrono de dados do usuario conectado
-                    state.BeginReceive(); 
+                    state.BeginReceive();
                 }
             }
             catch (SocketException ex)

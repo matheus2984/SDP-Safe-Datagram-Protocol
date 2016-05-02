@@ -7,7 +7,7 @@ namespace SDP.Interfaces
     /// <summary>
     /// Classe base para as classes de Socket dessa biblioteca
     /// </summary>
-    internal abstract class AsyncSocketBase : Socket, IAsyncSocket
+    internal abstract class AsyncSocketBase : System.Net.Sockets.Socket, IAsyncSocket
     {
         /// <summary>
         /// Ocorre quando uma conexão é bem sucedida

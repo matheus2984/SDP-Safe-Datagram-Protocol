@@ -25,8 +25,11 @@ namespace SDP.Socket
         /// Construtor
         /// </summary>
         /// <param name="cfg"></param>
-        public AsyncServerSocket(SocketCfg cfg)
-            : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+        /// <param name="addressFamily"></param>
+        /// <param name="socketType"></param>
+        /// <param name="protocolType"></param>
+        public AsyncServerSocket(SocketCfg cfg, AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType)
+            : base(addressFamily,socketType,protocolType)
         {
             Cfg = cfg;
 

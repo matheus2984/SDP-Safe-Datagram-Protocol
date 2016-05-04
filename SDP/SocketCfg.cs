@@ -62,7 +62,7 @@ namespace SDP
         /// <param name="optionLevel"></param>
         /// <param name="optionName"></param>
         public void SetSocketOption(SocketOptionLevel optionLevel, SocketOptionName optionName)
-        {
+        {   
             // as opções são setadas atraves de uma relação entre o nivel (Socket, IP, TCP, UDP) e o tipo da opção desejada
             var node = new Node<SocketOptionLevel, SocketOptionName>
             {

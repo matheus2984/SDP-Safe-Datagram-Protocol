@@ -37,6 +37,8 @@
     <Compile Include="Enums\ProtocolType.cs" />
     <Compile Include="Interfaces\IAccept.cs" />
     <Compile Include="Interfaces\IConnect.cs" />
+    <Compile Include="Modules\UDP\UdpDatagramReceiveModule.cs" />
+    <Compile Include="Modules\UDP\UdpDatagramSendModule.cs" />
     <Compile Include="SocketCfg.cs" />
     <Compile Include="Interfaces\AsyncSocketBase.cs" />
     <Compile Include="Interfaces\IAsyncClientSocket.cs" />
@@ -64,7 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\SDP\" />
-    <Folder Include="Modules\UDP\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

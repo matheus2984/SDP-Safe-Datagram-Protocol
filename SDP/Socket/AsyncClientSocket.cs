@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using SDP.Interfaces;
 using SDP.Modules.TCP;
 
-namespace SDP
+namespace SDP.Socket
 {
     /// <summary>
     /// Socket de cliente assíncrono

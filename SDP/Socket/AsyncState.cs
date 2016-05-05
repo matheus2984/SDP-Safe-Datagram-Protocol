@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using SDP.Events;
 using SDP.Interfaces;
 using SDP.Modules.TCP;
+using SDP.Modules.UDP;
+using ProtocolType = SDP.Enums.ProtocolType;
 using SocketType = SDP.Enums.SocketType;
 
 namespace SDP.Socket
@@ -40,12 +44,19 @@ namespace SDP.Socket
         /// <summary>
         /// Gerencia a forma como os dados devem ser recebidos
         /// </summary>
-        private readonly IReceive receiveModule;
+        private IReceive receiveModule;
 
         /// <summary>
         /// Gerencia a forma como os dados devem ser enviados
         /// </summary>
-        private readonly ISend sendModule;
+        private ISend sendModule;
+
+        /// <summary>
+        /// Configurações do host
+        /// </summary>
+        public SocketCfg Cfg { get; private set; }
+
+        internal EndPoint endPoint;
 
         /// <summary>
         /// Construtor
@@ -59,7 +70,26 @@ namespace SDP.Socket
             AsyncSocket = asyncServerSocket;
             Socket = socket;
             Buffer = buffer;
+            Cfg = cfg;
 
+            switch (cfg.ProtocolType)
+            {
+                case ProtocolType.TCP:
+                    ConfigureTcp(cfg);
+                    break;
+                case ProtocolType.UDP:
+                    ConfigureUdp(cfg);
+                    break;
+                case ProtocolType.SDP:
+                    ConfigureSdp(cfg);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void ConfigureTcp(SocketCfg cfg)
+        {
             switch (cfg.SocketType)
             {
                 case SocketType.Datagram:
@@ -75,6 +105,27 @@ namespace SDP.Socket
             }
         }
 
+        private void ConfigureUdp(SocketCfg cfg)
+        {
+            switch (cfg.SocketType)
+            {
+                case SocketType.Datagram:
+                    receiveModule = new UdpDatagramReceiveModule(this);
+                    sendModule = new UdpDatagramSendModule(this);
+                    break;
+                case SocketType.Stream:
+                    throw new Exception("Este protocolo não permite envio/recebimento do tipo stream");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void ConfigureSdp(SocketCfg cfg)
+        {
+            throw new Exception("Protocolo não implementado");
+        }
+
         /// <summary>
         /// Inicia recebimento de dados de forma assíncrona
         /// </summary>
@@ -88,6 +139,7 @@ namespace SDP.Socket
         /// </summary>
         public void BeginDisconnect()
         {
+            if (Cfg.ProtocolType == ProtocolType.UDP) return;
             Socket.Shutdown(SocketShutdown.Both);
             Socket.BeginDisconnect(false, AsyncDisconnect, this);
         }

@@ -15,7 +15,7 @@ namespace ServerTest
         {
             Console.Title = "TCP - Async Server Socket Test - SDP LIBRARY";
 
-            var serverCfg = new SocketCfg("127.0.0.1", 9959, ProtocolType.TCP);
+            var serverCfg = new SocketCfg("25.175.152.176", 9959, ProtocolType.TCP);
 
             server = SdpSocket.ServerFactory(serverCfg);
             server.Connect += server_Connect;

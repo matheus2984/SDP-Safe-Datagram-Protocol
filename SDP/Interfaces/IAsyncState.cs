@@ -16,6 +16,11 @@
         byte[] Buffer { get; set; }
 
         /// <summary>
+        /// Configurações do socket
+        /// </summary>
+        SocketCfg Cfg { get; }
+
+        /// <summary>
         /// Ultimo pacote de dados recebido
         /// </summary>
         byte[] ReceivedBuffer { get; set; }

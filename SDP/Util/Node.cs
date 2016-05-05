@@ -5,7 +5,7 @@
     /// </summary>
     /// <typeparam name="T1"></typeparam>
     /// <typeparam name="T2"></typeparam>
-    internal class Node<T1, T2> // T1 e T2 são tipos genericos, ou seja, podem representar quaisquer valores predefinidos na sua criação
+    internal class Node<T1, T2> // T1 e T2 são tipos genericos, ou seja, podem representar quaisquer tipo de dados predefinidos na sua criação
     {
         public T1 Value1 { get; set; } 
         public T2 Value2 { get; set; }

@@ -54,6 +54,7 @@ namespace SDP
             socketOptionList=new List<Node<SocketOptionLevel, SocketOptionName>>();
             IP = ip;
             Port = port;
+            ProtocolType = protocolType;
         }
 
         /// <summary>

@@ -26,32 +26,31 @@ namespace SDP.Socket
         /// </summary>
         internal IAsyncState AsyncState;
 
-        private readonly IConnect connectModule;
+        private  IConnect connectModule;
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="cfg"></param>
+        /// <param name="addressFamily"></param>
+        /// <param name="socketType"></param>
+        /// <param name="protocolType"></param>
         public AsyncClientSocket(SocketCfg cfg, AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType)
             : base(addressFamily, socketType, protocolType)
         {
             // objeto de configuração do socket
             Cfg = cfg;
             
-            // Fecha o soquete normalmente sem remanescentes
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-            // Verifica a conexão para checar se a outra se mantem ativa
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-
             // Representa o ponto de conexão (IP e Porta) do servidor
             IpEndPoint = new IPEndPoint(IPAddress.Parse(cfg.IP), cfg.Port);
 
             switch (cfg.ProtocolType)
             {
                 case Enums.ProtocolType.TCP:
-                    connectModule = new TcpConnectModule(this);
+                 ConfigureTcp();
                     break;
                 case Enums.ProtocolType.UDP:
+                    ConfigureUdp();
                     break;
                 case Enums.ProtocolType.SDP:
                     break;
@@ -61,11 +60,44 @@ namespace SDP.Socket
         }
 
         /// <summary>
+        /// Configura o server para o modo tcp
+        /// </summary>
+        private void ConfigureTcp()
+        {
+            // inicia modulo de conexão
+            connectModule = new TcpConnectModule(this);
+        }
+
+        /// <summary>
+        /// Configura o server para o modo udp
+        /// </summary>
+        private void ConfigureUdp()
+        {
+            // udp não é baseado em conexão
+
+            AsyncState = new AsyncState(this, Cfg, this, new byte[1024]);
+            ((AsyncState)(AsyncState)).endPoint = new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port);
+            ((AsyncState)(AsyncState)).BeginReceive();
+        }
+
+        /// <summary>
         /// Inicia tentativa de conexão com o servidor
         /// </summary>
         public void BeginConnect()
         {
-           connectModule.BeginConnect();
+            switch (Cfg.ProtocolType)
+            {
+                case Enums.ProtocolType.TCP:
+                    connectModule.BeginConnect();
+                    break;
+                case Enums.ProtocolType.UDP:
+                // udp não é baseado em conexão
+                //    throw new Exception("Este protocolo não pode estabelecer uma conexão");
+                case Enums.ProtocolType.SDP:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>

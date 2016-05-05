@@ -19,7 +19,7 @@ namespace SDP.Socket
         /// <summary>
         /// Gerencia a forma como os usuarios irão se conectar
         /// </summary>
-        private readonly IAccept acceptModule;
+        private IAccept acceptModule;
 
         /// <summary>
         /// Construtor
@@ -28,27 +28,19 @@ namespace SDP.Socket
         /// <param name="addressFamily"></param>
         /// <param name="socketType"></param>
         /// <param name="protocolType"></param>
-        public AsyncServerSocket(SocketCfg cfg, AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType)
-            : base(addressFamily,socketType,protocolType)
+        public AsyncServerSocket(SocketCfg cfg, AddressFamily addressFamily, SocketType socketType,
+            ProtocolType protocolType)
+            : base(addressFamily, socketType, protocolType)
         {
             Cfg = cfg;
-
-            // Fecha o soquete normalmente sem remanescentes
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-            // Verifica a conexão para checar se a outra se mantem ativa
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-
-            // define o IP e a Porta em que o servidor ira trabalhar
-            Bind(new IPEndPoint(IPAddress.Parse(cfg.IP), cfg.Port));
-            // limite de conexões que podem existir ao mesmo tempo
-            Listen(500);
 
             switch (cfg.ProtocolType)
             {
                 case Enums.ProtocolType.TCP:
-                    acceptModule = new TcpAcceptModule(this);
+                    ConfigureTcp();
                     break;
                 case Enums.ProtocolType.UDP:
+                    ConfigureUdp();
                     break;
                 case Enums.ProtocolType.SDP:
                     break;
@@ -58,10 +50,45 @@ namespace SDP.Socket
         }
 
         /// <summary>
+        /// Configura o server para o modo tcp
+        /// </summary>
+        private void ConfigureTcp()
+        {
+            // Fecha o soquete normalmente sem remanescentes
+            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+            // Verifica a conexão para checar se a outra se mantem ativa
+            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+
+            // define o IP e a Porta em que o servidor ira trabalhar
+            Bind(new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port));
+
+            // limite de conexões que podem existir ao mesmo tempo
+            Listen(500);
+
+            acceptModule = new TcpAcceptModule(this);
+        }
+
+        /// <summary>
+        /// Configura o server para o modo udp
+        /// </summary>
+        private void ConfigureUdp()
+        {
+            // udp não é baseado em conexão
+
+            // define o IP e a Porta em que o servidor ira trabalhar
+            Bind(new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port));
+
+            var asyncState = new AsyncState(this, Cfg, this, new byte[1024]);
+            asyncState.endPoint = new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port);
+            asyncState.BeginReceive(); 
+        }
+
+        /// <summary>
         /// Inicia escuta de conexões
         /// </summary>
         public void BeginAccept()
         {
+            if (acceptModule == null) return;
             // chama modulo de escuta de conexões
             acceptModule.BeginAccept();
         }

@@ -36,12 +36,14 @@ namespace SDP.FEC
         {
             if (ecBytes == 0)
             {
-                throw new ArgumentException("No error correction bytes");
+                return;
+                //   throw new ArgumentException("No error correction bytes");
             }
             var dataBytes = toEncode.Length - ecBytes;
             if (dataBytes <= 0)
             {
-                throw new ArgumentException("No data bytes provided");
+                return;
+                //   throw new ArgumentException("No data bytes provided");
             }
 
             var generator = BuildGenerator(ecBytes);

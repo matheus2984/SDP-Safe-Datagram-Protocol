@@ -53,6 +53,7 @@ namespace SDP.Socket
                     ConfigureUdp();
                     break;
                 case Enums.ProtocolType.SDP:
+                    ConfigureSdp();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -60,7 +61,7 @@ namespace SDP.Socket
         }
 
         /// <summary>
-        /// Configura o server para o modo tcp
+        /// Configura o cliente para o modo tcp
         /// </summary>
         private void ConfigureTcp()
         {
@@ -69,14 +70,27 @@ namespace SDP.Socket
         }
 
         /// <summary>
-        /// Configura o server para o modo udp
+        /// Configura o cliente para o modo udp
         /// </summary>
         private void ConfigureUdp()
         {
             // udp não é baseado em conexão
 
             AsyncState = new AsyncState(this, Cfg, this, new byte[1024]);
-            ((AsyncState)(AsyncState)).endPoint = new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port);
+            ((AsyncState)(AsyncState)).EndPoint = new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port);
+            ((AsyncState)(AsyncState)).BeginReceive();
+        }
+
+        /// <summary>
+        /// Configura o cliente para o modo udp
+        /// </summary>
+        private void ConfigureSdp()
+        {
+            // udp não é baseado em conexão
+
+            Bind(new IPEndPoint(IPAddress.Any, 0));
+            AsyncState = new AsyncState(this, Cfg, this, new byte[1024]);
+            ((AsyncState)(AsyncState)).EndPoint = new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port);
             ((AsyncState)(AsyncState)).BeginReceive();
         }
 
@@ -93,6 +107,7 @@ namespace SDP.Socket
                 case Enums.ProtocolType.UDP:
                 // udp não é baseado em conexão
                 //    throw new Exception("Este protocolo não pode estabelecer uma conexão");
+                    break;
                 case Enums.ProtocolType.SDP:
                     break;
                 default:
@@ -107,6 +122,15 @@ namespace SDP.Socket
         public new void Send(byte[] packet)
         {
             AsyncState.Send(packet);
+        }
+
+        /// <summary>
+        /// Envia dados de forma assincrona
+        /// </summary>
+        /// <param name="packet"></param>
+        public new void SendAsync(byte[] packet)
+        {
+            AsyncState.AsyncSend(packet);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace SDP.Modules.UDP
         {
             EndPoint clientEp = new IPEndPoint(IPAddress.Any, 0);
             int msgLen = asyncState.Socket.EndReceiveFrom(iar, ref clientEp);
-            asyncState.endPoint = clientEp;
+            asyncState.EndPoint = clientEp;
             asyncState.ReceivedBuffer = new byte[msgLen];
             Buffer.BlockCopy(asyncState.Buffer, 0, asyncState.ReceivedBuffer, 0, msgLen);
 

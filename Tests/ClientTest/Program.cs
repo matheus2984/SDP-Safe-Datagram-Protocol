@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using PackageLibrary;
 using SDP;
 using SDP.Enums;
 using SDP.Events;
@@ -17,9 +16,9 @@ namespace ClientTest
         {
             manualReset = new ManualResetEvent(false);
 
-            Console.Title = "TCP - Async Client Socket Test - SDP LIBRARY";
-
-            var clientCfg = new SocketCfg("25.175.152.176", 9959, ProtocolType.TCP);
+            var clientCfg = new SocketCfg("25.175.152.176", 9959, ProtocolType.SDP);
+   
+            Console.Title =  clientCfg.ProtocolType+" - Async Client Socket Test - SDP LIBRARY";
 
             client = SdpSocket.ClientFactory(clientCfg);
             client.Connect += client_Connect;
@@ -30,11 +29,8 @@ namespace ClientTest
 
             manualReset.WaitOne(2000);
 
-            for (int i = 0; i < 50; i++)
-            {
-                var packet = new MessagePacket(i.ToString());
-                client.Send(packet.Serialize());
-            }
+            var packet = new byte[16];
+            client.Send(packet);
 
             while (true)
             {

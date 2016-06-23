@@ -1,5 +1,4 @@
 ﻿using System;
-using PackageLibrary;
 using SDP;
 using SDP.Enums;
 using SDP.Events;
@@ -13,9 +12,8 @@ namespace ServerTest
 
         private static void Main()
         {
-            Console.Title = "TCP - Async Server Socket Test - SDP LIBRARY";
-
-            var serverCfg = new SocketCfg("25.175.152.176", 9959, ProtocolType.TCP);
+            var serverCfg = new SocketCfg("25.175.152.176", 9959, ProtocolType.SDP);
+            Console.Title = serverCfg.ProtocolType + " - Async Server Socket Test - SDP LIBRARY";
 
             server = SdpSocket.ServerFactory(serverCfg);
             server.Connect += server_Connect;
@@ -24,6 +22,7 @@ namespace ServerTest
 
             server.BeginAccept();
 
+           
             Console.ReadKey();
         }
 
@@ -34,9 +33,10 @@ namespace ServerTest
 
         static void server_Receive(object sender, ReceiveEventArgs e)
         {
-            Console.WriteLine("Recebi " + e.ReceivedData.Length + " bytes");
-            var packet = new MessagePacket(e.ReceivedData).Deserialize();
-            Console.WriteLine(packet.Message);
+            Console.WriteLine("Recebi " + e.ReceivedData.Length + " bytes de "+e.State.EndPoint);
+          //  e.State.Send(e.ReceivedData);
+        //    var packet = new MessagePacket(e.ReceivedData).Deserialize();
+        //    Console.WriteLine(packet.Message);
         }
 
         static void server_Disconnect(object sender, ConnectionEventArgs e)

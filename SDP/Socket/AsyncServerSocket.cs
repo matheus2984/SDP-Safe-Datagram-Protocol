@@ -43,6 +43,7 @@ namespace SDP.Socket
                     ConfigureUdp();
                     break;
                 case Enums.ProtocolType.SDP:
+                    ConfigureSdp();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -78,9 +79,25 @@ namespace SDP.Socket
             // define o IP e a Porta em que o servidor ira trabalhar
             Bind(new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port));
 
-            var asyncState = new AsyncState(this, Cfg, this, new byte[1024]);
-            asyncState.endPoint = new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port);
+            var asyncState = new AsyncState(this, Cfg, this, new byte[1024*2]);
+            asyncState.EndPoint = new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port);
             asyncState.BeginReceive(); 
+        }
+
+        /// <summary>
+        /// Configura o server para o modo sdp
+        /// </summary>
+        private void ConfigureSdp()
+        {
+            // sdp não é baseado em conexão
+
+            // define o IP e a Porta em que o servidor ira trabalhar
+            Bind(new IPEndPoint(IPAddress.Parse(Cfg.IP), 0)); // Raw socket não trabalha com portas por isso é 0
+            SetSocketOption(SocketOptionLevel.IP, SocketOptionName.HeaderIncluded, 1); // inclui cabeçalhos udp/ip
+
+            var asyncState = new AsyncState(this, Cfg, this, new byte[1024]);
+            asyncState.EndPoint = new IPEndPoint(IPAddress.Parse(Cfg.IP), Cfg.Port);
+            asyncState.BeginReceive();
         }
 
         /// <summary>

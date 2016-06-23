@@ -1,4 +1,6 @@
-﻿namespace SDP.Interfaces
+﻿using System.Net;
+
+namespace SDP.Interfaces
 {
     /// <summary>
     /// Interface que expõe os elementos indispensaveis para classes de AsyncState/Cliente
@@ -11,14 +13,19 @@
         // Socket Socket { get; set; } 
 
         /// <summary>
-        /// Buffer de recebimento de dados
-        /// </summary>
-        byte[] Buffer { get; set; }
-
-        /// <summary>
         /// Configurações do socket
         /// </summary>
         SocketCfg Cfg { get; }
+        
+        /// <summary>
+        /// EndPoint pacote
+        /// </summary>
+        EndPoint EndPoint { get; }
+
+        /// <summary>
+        /// Buffer de recebimento de dados
+        /// </summary>
+        byte[] Buffer { get; set; }
 
         /// <summary>
         /// Ultimo pacote de dados recebido

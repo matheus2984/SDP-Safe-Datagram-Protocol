@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using SDP.Events;
 using SDP.Interfaces;
+using SDP.Modules.SDP;
 using SDP.Modules.TCP;
 using SDP.Modules.UDP;
 using ProtocolType = SDP.Enums.ProtocolType;
@@ -56,7 +56,7 @@ namespace SDP.Socket
         /// </summary>
         public SocketCfg Cfg { get; private set; }
 
-        internal EndPoint endPoint;
+        public EndPoint EndPoint { get; internal set; }
 
         /// <summary>
         /// Construtor
@@ -115,7 +115,6 @@ namespace SDP.Socket
                     break;
                 case SocketType.Stream:
                     throw new Exception("Este protocolo não permite envio/recebimento do tipo stream");
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -123,7 +122,17 @@ namespace SDP.Socket
 
         private void ConfigureSdp(SocketCfg cfg)
         {
-            throw new Exception("Protocolo não implementado");
+            switch (cfg.SocketType)
+            {
+                case SocketType.Datagram:
+                    receiveModule = new SdpDatagramReceiveModule(this);
+                    sendModule = new SdpDatagramSendModule(this);
+                    break;
+                case SocketType.Stream:
+                    throw new Exception("Este protocolo não permite envio/recebimento do tipo stream");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>

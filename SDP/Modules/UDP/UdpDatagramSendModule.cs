@@ -4,7 +4,6 @@ using System.Net.Sockets;
 using System.Threading;
 using SDP.Interfaces;
 using SDP.Socket;
-using SDP.Util;
 
 namespace SDP.Modules.UDP
 {
@@ -72,7 +71,7 @@ namespace SDP.Modules.UDP
         {
             try
             {
-                asyncState.Socket.SendTo(packet, asyncState.endPoint);
+                asyncState.Socket.SendTo(packet, asyncState.EndPoint);
             }
             catch (SocketException ex)
             {
@@ -94,7 +93,7 @@ namespace SDP.Modules.UDP
             try
             {
                 asyncState.Socket.BeginSendTo(packet, 0, packet.Length, SocketFlags.None,
-                    asyncState.endPoint, AsyncSend, asyncState);
+                    asyncState.EndPoint, AsyncSend, asyncState);
 
                 // espera a sinalização de que os dados foram transmitidos ou aguarda 1 segundo
                 manualReset.WaitOne(1000);

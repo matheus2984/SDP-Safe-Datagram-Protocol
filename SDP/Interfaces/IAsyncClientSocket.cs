@@ -15,5 +15,11 @@
         /// </summary>
         /// <param name="packet"></param>
         void Send(byte[] packet);
+
+        /// <summary>
+        /// Envia dados de forma assincrona
+        /// </summary>
+        /// <param name="packet"></param>
+        void SendAsync(byte[] packet);
     }
 }

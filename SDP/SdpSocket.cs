@@ -22,13 +22,11 @@ namespace SDP
             switch (cfg.ProtocolType)
             {
                 case ProtocolType.TCP:
-                    return new AsyncServerSocket(cfg, AddressFamily.InterNetwork, SocketType.Stream,
-                        System.Net.Sockets.ProtocolType.Tcp);
+                    return new AsyncServerSocket(cfg, AddressFamily.InterNetwork, SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
                 case ProtocolType.UDP:
-                    return new AsyncServerSocket(cfg, AddressFamily.InterNetwork, SocketType.Dgram,
-                        System.Net.Sockets.ProtocolType.Udp);
+                    return new AsyncServerSocket(cfg, AddressFamily.InterNetwork, SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
                 case ProtocolType.SDP:
-                    throw new NotImplementedException();
+                    return new AsyncServerSocket(cfg, AddressFamily.InterNetwork,SocketType.Raw, System.Net.Sockets.ProtocolType.Udp);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -45,13 +43,11 @@ namespace SDP
             switch (cfg.ProtocolType)
             {
                 case ProtocolType.TCP:
-                    return new AsyncClientSocket(cfg, AddressFamily.InterNetwork, SocketType.Stream,
-                        System.Net.Sockets.ProtocolType.Tcp);
+                    return new AsyncClientSocket(cfg, AddressFamily.InterNetwork, SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
                 case ProtocolType.UDP:
-                    return new AsyncClientSocket(cfg, AddressFamily.InterNetwork, SocketType.Dgram,
-                        System.Net.Sockets.ProtocolType.Udp);
+                    return new AsyncClientSocket(cfg, AddressFamily.InterNetwork, SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
                 case ProtocolType.SDP:
-                    throw new NotImplementedException();
+                    return new AsyncClientSocket(cfg, AddressFamily.InterNetwork, SocketType.Raw, System.Net.Sockets.ProtocolType.Udp);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

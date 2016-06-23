@@ -35,8 +35,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ProtocolType.cs" />
+    <Compile Include="FEC\GenericGF.cs" />
+    <Compile Include="FEC\GenericGFPoly.cs" />
+    <Compile Include="FEC\ReedSolomonDecoder.cs" />
+    <Compile Include="FEC\ReedSolomonEncoder.cs" />
     <Compile Include="Interfaces\IAccept.cs" />
     <Compile Include="Interfaces\IConnect.cs" />
+    <Compile Include="LowLevelAPI\Ipv4Header.cs" />
+    <Compile Include="LowLevelAPI\Ipv6FragmentHeader.cs" />
+    <Compile Include="LowLevelAPI\Ipv6Header.cs" />
+    <Compile Include="LowLevelAPI\ProtocolHeader.cs" />
+    <Compile Include="LowLevelAPI\UdpHeader.cs" />
+    <Compile Include="Modules\SDP\Package\SdpPacketBuild.cs" />
+    <Compile Include="Modules\SDP\SdpDatagramReceiveModule.cs" />
+    <Compile Include="Modules\SDP\SdpDatagramSendModule.cs" />
     <Compile Include="Modules\UDP\UdpDatagramReceiveModule.cs" />
     <Compile Include="Modules\UDP\UdpDatagramSendModule.cs" />
     <Compile Include="SocketCfg.cs" />
@@ -64,9 +76,7 @@
     <Compile Include="Util\BufferOperation.cs" />
     <Compile Include="Util\Node.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Modules\SDP\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

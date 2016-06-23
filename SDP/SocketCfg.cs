@@ -34,12 +34,12 @@ namespace SDP
         /// <summary>
         /// Tipo de transmissão
         /// </summary>
-        internal SocketType SocketType { get; set; }
+        public SocketType SocketType { get; set; }
 
         /// <summary>
         /// Tipo de protocolo
         /// </summary>
-        internal ProtocolType ProtocolType { get; set; }
+        public ProtocolType ProtocolType { get; set; }
 
         /// <summary>
         /// Lista de opções setadas do socket
